@@ -10,9 +10,18 @@ WORK_MIN = 1
 SHORT_BREAK_MIN = 1
 LONG_BREAK_MIN = 20
 repeat = 0
+check_marks = ''
+clock = None
 
 
-# ---------------------------- TIMER RESET ------------------------------- # 
+# ---------------------------- TIMER RESET ------------------------------- #
+def reset():
+    window.after_cancel(clock)
+    global repeat, check_marks
+    repeat = 0
+    check_marks = ''
+    whats_now_label.config(text="")
+    image_background.itemconfig(timer, text=f'00:00')
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
@@ -32,11 +41,12 @@ def count_down(time_in_seconds):
         image_background.itemconfig(timer, text=f'{minutes}:0{seconds}')
     else:
         image_background.itemconfig(timer, text=f'{minutes}:{seconds}')
+    global clock
+    clock = window.after(1000, count_down, time_in_seconds - 1)
 
-    window.after(1000, count_down, time_in_seconds - 1)
     if time_in_seconds == 0:
+        global check_marks
         check = '✓ '
-        check_marks = ''
         minutes_to_seconds()
         work_sessions = floor(repeat/2)
         for x in range(work_sessions):
@@ -47,7 +57,6 @@ def count_down(time_in_seconds):
 def minutes_to_seconds(minutes=WORK_MIN):
     global repeat
     repeat += 1
-    print(repeat)
     if repeat == 8:
         whats_now_label.config(text='Long break', fg=GREEN, bg=YELLOW)
         count_down(LONG_BREAK_MIN*60)
@@ -84,7 +93,7 @@ check_label.grid(row=5, column=2)
 start_button = Button(text='Start', command=minutes_to_seconds)
 start_button.grid(row=4, column=1)
 
-reset_button = Button(text='Reset')
+reset_button = Button(text='Reset', command=reset)
 reset_button.grid(row=4, column=3)
 
 
