@@ -35,7 +35,13 @@ def count_down(time_in_seconds):
 
     window.after(1000, count_down, time_in_seconds - 1)
     if time_in_seconds == 0:
+        check = '✓ '
+        check_marks = ''
         minutes_to_seconds()
+        work_sessions = floor(repeat/2)
+        for x in range(work_sessions):
+            check_marks += check
+        check_label.config(text=check_marks)
 
 
 def minutes_to_seconds(minutes=WORK_MIN):
@@ -72,8 +78,7 @@ timer_label.grid(row=1, column=2)
 whats_now_label = Label(text='', font=(FONT_NAME, 20, 'bold'))
 whats_now_label.grid(row=2, column=2)
 
-check = '✓'
-check_label = Label(text=check, fg=GREEN, bg=YELLOW, font=15)
+check_label = Label(text='', fg=GREEN, bg=YELLOW, font=15)
 check_label.grid(row=5, column=2)
 
 start_button = Button(text='Start', command=minutes_to_seconds)
